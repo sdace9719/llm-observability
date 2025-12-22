@@ -1,0 +1,15 @@
+unstructured 
+markdown
+langchain
+langchain-community
+langchain-text-splitters
+google-cloud-aiplatform 
+langchain-google-genai
+ddtrace
+datadog
+python-dotenv
+langchain-huggingface
+sentence-transformers
+psycopg[binary]
+ipython
+Flask[async]
