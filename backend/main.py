@@ -15,11 +15,11 @@ from llm import State, chatagent
 from flask import Flask, jsonify, request
 import psycopg
 
+from db_utils import get_db_conn, DB_SETTINGS
+
 from utils import (
-  DB_SETTINGS, 
   create_session, 
   validate_session,
-  get_db_conn,
   increment_session_count
 )
 

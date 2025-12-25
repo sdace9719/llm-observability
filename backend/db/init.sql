@@ -139,3 +139,8 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON SEQUENCES TO support_r
 ALTER TABLE IF EXISTS user_sessions
   ADD COLUMN IF NOT EXISTS session_count INTEGER NOT NULL DEFAULT 0;
 
+GRANT INSERT, update, DELETE ON TABLE orders TO support_ro;
+GRANT USAGE, SELECT ON SEQUENCE orders_order_id_seq TO support_ro;
+GRANT INSERT, update, DELETE ON TABLE order_items TO support_ro;
+GRANT USAGE, SELECT ON SEQUENCE order_items_order_item_id_seq TO support_ro;
+

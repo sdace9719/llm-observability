@@ -16,7 +16,7 @@ for line in lines:
     except IndexError:
         continue
 
-user_identifier = "alex.martin@example.com"
+user_identifier = "taylor.chen@example.com"
 
 max_conversations = 1
 
@@ -26,15 +26,17 @@ login_response = req.post("http://localhost:5000/api/login", json={'email': user
 print(login_response.json())
 print("new session started....")
 #max_length = r.randint(1, max_conversations)
+#Instead of the 2 mats order i placed, i want 1 glow lamp.
 max_length = 1
 for j in range(max_length):
     #q = r.choice(queries)
-    q = 'Which customer has the phone number "+1-206-555-0155"'
+    #q = 'I want to place a new order of 2 Floor Mats'
+    q = 'Instead of the 2 mats order i placed, i want 1 glow lamp.'
     payload = {'prompt': q}
     print(q)
     # Use the same session so cookies (session_id) are included.
     response = req.post("http://localhost:5000/api/chat", json=payload)
-    print(response.json())
+    print(response.json()['reply'])
 logout_response = req.post("http://localhost:5000/api/logout")
 print("session ended....")
 print("--------------------------------")

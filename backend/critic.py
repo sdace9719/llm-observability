@@ -1,12 +1,17 @@
 import os
 from ddtrace import tracer
 from ddtrace import patch_all
+from ddtrace.llmobs.decorators import llm
+from ddtrace.llmobs import LLMObs
+from utils import get_cost
 from state import State
 patch_all(llm_providers=["langchain"])
+
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+@llm(model_name="gemini-pro-latest", model_provider="google")
 def check_query_classification(State: State) -> State:
     template = """
     You need to act as a critic, indentifying if a given user query is a question, statement or a possible security violation.
@@ -19,11 +24,23 @@ def check_query_classification(State: State) -> State:
     prompt = ChatPromptTemplate.from_template(template).invoke({"query": State['query'], "user_identifier": State['user_identifier']})
     critic = ChatGoogleGenerativeAI(model="gemini-pro-latest", temperature=0, api_key=os.getenv("GOOGLE_API_KEY"),transport="rest")
     result = critic.invoke(prompt)
+    usage = result.usage_metadata
+    cost = get_cost(usage.get("input_tokens", -1), usage.get("output_tokens", -1), "gemini-pro-latest")
+    LLMObs.annotate(
+    metrics={
+        # LangChain normalizes these keys for you
+        "input_tokens": usage.get("input_tokens", -1),
+        "output_tokens": usage.get("output_tokens", -1),
+        "total_tokens": usage.get("total_tokens", -1),
+        "total_cost": cost,
+        }
+    )
     result = result.content.strip()
     if tracer.current_span():
         tracer.current_span().set_tag("critic_query_classification", result)
     return {"messages": [("ai", result)], "is_question": result}
 
+@llm(model_name="gemini-pro-latest", model_provider="google")
 def check_rag_relevance(State: State) -> State:
     template = """
     You need to act as a critic, indentifying if a given piece of information
@@ -35,10 +52,22 @@ def check_rag_relevance(State: State) -> State:
     prompt = ChatPromptTemplate.from_template(template).invoke({"context": State['context'], "query": State['query']})
     critic = ChatGoogleGenerativeAI(model="gemini-pro-latest", temperature=0, api_key=os.getenv("GOOGLE_API_KEY"),transport="rest")
     result = critic.invoke(prompt)
+    usage = result.usage_metadata
+    cost = get_cost(usage.get("input_tokens", -1), usage.get("output_tokens", -1), "gemini-pro-latest")
+    LLMObs.annotate(
+    metrics={
+        # LangChain normalizes these keys for you
+        "input_tokens": usage.get("input_tokens", -1),
+        "output_tokens": usage.get("output_tokens", -1),
+        "total_tokens": usage.get("total_tokens", -1),
+        "total_cost": cost,
+        }
+    )
     if tracer.current_span():
         tracer.current_span().set_tag("rag_relevant", result.content)
     return {"messages": [("ai", result.content)], "rag_relevant": result.content}
 
+@llm(model_name="gemini-pro-latest", model_provider="google")
 def check_answer_relevance(State: State) -> State:
     template = """
     You need to act as a critic for another llm generating answer for a user's query.
@@ -57,5 +86,16 @@ def check_answer_relevance(State: State) -> State:
     prompt = ChatPromptTemplate.from_template(template).invoke({"query": State['query'], "context": State['context'], "answer": State['answer']})
     critic = ChatGoogleGenerativeAI(model="gemini-pro-latest", temperature=0, api_key=os.getenv("GOOGLE_API_KEY"),transport="rest")
     result = critic.invoke(prompt)
+    usage = result.usage_metadata
+    cost = get_cost(usage.get("input_tokens", -1), usage.get("output_tokens", -1), "gemini-pro-latest")
+    LLMObs.annotate(
+    metrics={
+        # LangChain normalizes these keys for you
+        "input_tokens": usage.get("input_tokens", -1),
+        "output_tokens": usage.get("output_tokens", -1),
+        "total_tokens": usage.get("total_tokens", -1),
+        "total_cost": cost,
+        }
+    )
     tracer.current_span().set_tag("answer_relevant", result.content)
     return {"messages": [("ai", result.content)], "answer_relevant": result.content}

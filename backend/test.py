@@ -50,6 +50,20 @@ for i in range(5):
     print("session ended....")
     print("--------------------------------")
 
+queries = ['I want to place a new order of 2 Floor Mats','Instead of the 2 mats order i placed, i want 1 glow lamp']
+for q in queries:
+    req = requests.session()
+    user_identifier = r.choice(user_identifiers)
+    login_response = req.post("http://localhost:5000/api/login", json={'email': user_identifier})
+    print("new session started....")
+    payload = {'prompt': q}
+    response = req.post("http://localhost:5000/api/chat", json=payload)
+    reply = response.json()['reply']
+    print(reply)
+    logout_response = req.post("http://localhost:5000/api/logout")
+    print("session ended....")
+    print("--------------------------------")
+
 
 
 

@@ -10,6 +10,9 @@ datadog
 python-dotenv
 langchain-huggingface
 sentence-transformers
+thefuzz[speedup]
 psycopg[binary]
 ipython
 Flask[async]
+datadog-api-client
+datadog

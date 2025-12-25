@@ -1,23 +1,17 @@
-from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
+import json
 import os
 from typing import Optional
 import uuid
-from ddtrace import tracer
-from flask import request
 import psycopg
 from transformers import pipeline
 from datadog import statsd
 
+from db_utils import get_db_conn
+
 # 1. Load the Emotion Pipeline
 # This model returns all 28 emotions. We will filter for "confusion".
-DB_SETTINGS = {
-    "host": os.getenv("DB_HOST", "localhost"),
-    "port": os.getenv("DB_PORT", "5431"),
-    "dbname": os.getenv("DB_NAME", "supportdb"),
-    "user": os.getenv("DB_USER", "support_ro"),
-    "password": os.getenv("DB_PASSWORD", "support_ro"),
-}
+
 
 SESSION_MAX_AGE_SECONDS = int(os.getenv('SESSION_MAX_AGE_SECONDS', '300'))
 
@@ -25,14 +19,6 @@ def render_graph_image(app):
     png_data = app.get_graph().draw_mermaid_png()
     with open("graph_visualization.png", "wb") as f:
         f.write(png_data)
-
-@contextmanager
-def get_db_conn():
-  conn = psycopg.connect(**DB_SETTINGS)
-  try:
-    yield conn
-  finally:
-    conn.close() # default 5 minutes
 
 
 def remove_expired_sessions(cur, user_identifier: Optional[str] = None) -> None:
@@ -128,6 +114,13 @@ def increment_session_count(session_id: str) -> None:
         (session_id,),
     )
     conn.commit()
+
+def get_cost(input_tokens: int, output_tokens: int, model_name: str) -> float:
+  with open("cost-per-mil.json", "r") as f:
+    cost_per_mil = json.load(f)
+  cost = (cost_per_mil[model_name]["input"] * input_tokens / 1_000_000) + (cost_per_mil[model_name]["output"] * output_tokens / 1_000_000)
+  #print(f"input_tokens: {input_tokens}, output_tokens: {output_tokens}, model_name: {model_name}, cost: {cost}")
+  return cost
 
 # # Test it
 # user_input = "I don't understand how this billing works, it makes no sense."
