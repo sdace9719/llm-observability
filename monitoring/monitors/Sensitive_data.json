@@ -1,0 +1,24 @@
+{
+	"id": 17167206,
+	"name": "[CRITICAL] Sensitive Data Detected",
+	"type": "llm-observability alert",
+	"query": "llm-observability(\"@event_type:span @ml_app:vertex-chat-bot sensitive_data:*\").rollup(\"count\").last(\"5m\") > 50",
+	"message": "### Security Alert: Sensitive Data Detected\n\n**Severity:** Critical\n**Trigger:** More than 100 security violations detected in the last 5 minutes.\n\nThis may indicate a sensitive data leak or an attempt to gather sensitive information.\n\n**Recommended Action:**\n### 🔎 Investigation Since this alert was triggered by a high volume of violations, click below to see all matching traces: [View Violation Traces](https://us5.datadoghq.com/llm/traces?query=%40event_type%3Aspan%20%40parent_id%3Aundefined%20sensitive_data%3A%2A&agg_m=count&agg_m_source=base&agg_t=count&fromUser=false&start=1766414471567&end=1766418071567&paused=false)\n\n@workflow-Swapnil-Dec-21-2025-1618 @sd.ace9719@gmail.com",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 50,
+			"warning": 10
+		},
+		"enable_logs_sample": false,
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": false,
+		"renotify_interval": 0,
+		"escalation_message": "",
+		"new_host_delay": 300,
+		"groupby_simple_monitor": false
+	},
+	"priority": null,
+	"draft_status": "published"
+}

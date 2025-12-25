@@ -1,0 +1,22 @@
+{
+	"id": 17249741,
+	"name": "[ CRITICAL ] Prompt Injection Detected",
+	"type": "llm-observability alert",
+	"query": "llm-observability(\"@event_type:span @ml_app:vertex-chat-bot @evaluations.prompt_injection:\\\"prompt injection\\\"\").rollup(\"count\").last(\"5m\") > 10",
+	"message": "### Prompt Injection Alert\n\n**Severity:** Critical\n**Trigger:** Increased Prompt Injection attempts\n\nAn Increased number of attempts of prompt injection was detected for session: {{@session_id.name}}\n\n**Recommended Action:**\n### 🔎 Investigation Since this alert was triggered by prompt injections, click below to see the prompt injections: [View Spans](https://us5.datadoghq.com/llm/traces?query=%40event_type%3Aspan%20%40parent_id%3Aundefined%20%40evaluations.prompt_injection%3A%2A&agg_m=count&agg_m_source=base&agg_t=count&fromUser=false&start=1766338615490&end=1766511415490&paused=false)\n\n@sd.ace9719@gmail.com @workflow-Swapnil-Dec-21-2025-1618",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 10,
+			"warning": 5
+		},
+		"enable_logs_sample": false,
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": true,
+		"new_host_delay": 300,
+		"groupby_simple_monitor": false
+	},
+	"priority": null,
+	"draft_status": "published"
+}

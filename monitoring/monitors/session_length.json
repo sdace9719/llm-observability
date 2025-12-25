@@ -1,0 +1,20 @@
+{
+	"id": 17240727,
+	"name": "[ CRITICAL ] Degraded user experience: Session Length",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:chatbot.session.chat_length{*} > 15",
+	"message": "### User Experience Degradation Alert\n\n**Severity:** Critical\n**Trigger:** Increased Session Durations\n\nAn Increased value of session length was observed for the marked duration.\n\n**Recommended Action:**\n### 🔎 Investigation Since this alert was triggered by increased session length, click below to see top traces in terms of session duration: [View Spans](https://us5.datadoghq.com/metric/explorer?fromUser=true&graph_layout=stacked&start=1766473586771&end=1766487986771&paused=false#N4Ig7glgJg5gpgFxALlAGwIYE8D2BXJVEADxQEYAaELcqyKBAC1pEbghkcLIF8qo4AMwgA7CAgg4RKUAiwAHOChASAtnADOcAE4RNIKtrgBHPJoQaUAbVBGN8qVoD6gnNtUZCKiOq279VKY6epbINiAiGOrKQdpYZAYgUJ4YThr42gDGSsgg6gi6mZaBZnHKHsTImYyeAEY4CAB0WhoakiKN1Z5OaHAiMEzAAFQ8AAS1WKPALW1STtA8IDwAulSu7niYoeHrqpsYMaXxS6sgGnK9MiDyGL0ICDlncB4iEpmJbgLaThPKAG63MzFECfHROIx-HRaFCCW5aKhoURwJxyRTKZIaNhQRKIkTI+hMZQiNweNBLfgQeyYLAohSPXFKFY8PhneSIhAAYSkwhgKBEmzQPCAA)\n\n@sd.ace9719@gmail.com @workflow-Swapnil-Dec-21-2025-1618",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 15,
+			"warning": 10
+		},
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": false,
+		"new_host_delay": 300
+	},
+	"priority": null,
+	"draft_status": "published"
+}

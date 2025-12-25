@@ -1,0 +1,22 @@
+{
+	"id": 17296147,
+	"name": "[CRITICAL] Potential Tool Argument incorrectness",
+	"type": "llm-observability alert",
+	"query": "llm-observability(\"@event_type:span @ml_app:vertex-chat-bot @evaluations.tool_argument_correctness:\\\"tool arguments incorrect\\\"\").rollup(\"count\").last(\"5m\") > 10",
+	"message": "### Tooling Alert\n\n**Severity:** Critical\n**Trigger:** Tool Argument incorrectness detected.\n\nThis may indicate either an issue with the code or one or more prompts.\n\n**Recommended Action:**\n### 🔎 Investigation Since this alert was triggered by a high volume of potential incorrect tool arguments, click below to see all matching traces: [View Violation Traces](https://us5.datadoghq.com/llm/traces?query=%40event_type%3Aspan%20%40parent_id%3Aundefined%20%40evaluations.tool_argument_correctness%3A%2A&agg_m=count&agg_m_source=base&agg_t=count&fromUser=false&start=1766651693915&end=1766655293915&paused=false)\n\n@workflow-Swapnil-Dec-21-2025-1618 @sd.ace9719@gmail.com",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 10,
+			"warning": 5
+		},
+		"enable_logs_sample": false,
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": false,
+		"new_host_delay": 300,
+		"groupby_simple_monitor": false
+	},
+	"priority": null,
+	"draft_status": "published"
+}

@@ -1,0 +1,22 @@
+{
+	"id": 17242214,
+	"name": "[ CRITICAL ] Degraded Answer Relevancy",
+	"type": "trace-analytics alert",
+	"query": "trace-analytics(\"@answer_relevant:yes\").index(\"trace-search\", \"djm-search\").rollup(\"count\").last(\"5m\") < 50",
+	"message": "### User Experience Degradation Alert\n\n**Severity:** Critical\n**Trigger:** Reduced Answer Relevancy\n\nA decreased value of answer relevancy was observed for the marked duration.\n\n**Recommended Action:**\n### 🔎 Investigation Since this alert was triggered by reduction in answer relevance, click below to see top traces in terms of session duration: [View Spans](https://us5.datadoghq.com/apm/traces?query=-%40answer_relevant%3Ayes&agg_m=count&agg_m_source=base&agg_t=count&cols=core_service%2Ccore_resource_name%2Clog_duration%2Clog_http.method%2Clog_http.status_code&fromUser=false&historicalData=true&messageDisplay=inline&sort=desc&spanType=all&storage=hot&view=spans&start=1766404618505&end=1766491018505&paused=false",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 50,
+			"warning": 75
+		},
+		"enable_logs_sample": false,
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": false,
+		"new_host_delay": 300,
+		"groupby_simple_monitor": false
+	},
+	"priority": null,
+	"draft_status": "published"
+}

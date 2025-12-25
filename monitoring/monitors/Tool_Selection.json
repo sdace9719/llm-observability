@@ -1,0 +1,22 @@
+{
+	"id": 17296031,
+	"name": "[CRITICAL] Tool Selection potentially not correct",
+	"type": "llm-observability alert",
+	"query": "llm-observability(\"@event_type:span @ml_app:vertex-chat-bot @evaluations.tool_selection:\\\"tool selection incorrect\\\"\").rollup(\"count\").last(\"5m\") > 10",
+	"message": "### Security Alert\n\n**Severity:** Critical\n**Trigger:** An increasing number of instances were detected where tool selection by LLMs were incorrect\n\nThis may indicate a code issue or an issue with one or more prompts\n\n**Recommended Action:**\n### 🔎 Investigation since this alert was triggered by invocation of wrong tools, click below to see all matching traces: [View Violation Traces](https://us5.datadoghq.com/llm/traces?query=%40event_type%3Aspan%20%40parent_id%3Aundefined%20%40evaluations.tool_selection%3A%2A&agg_m=count&agg_m_source=base&agg_t=count&fromUser=false&start=1766651154160&end=1766654754160&paused=false)\n\n@workflow-Swapnil-Dec-21-2025-1618 @sd.ace9719@gmail.com",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 10,
+			"warning": 5
+		},
+		"enable_logs_sample": false,
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": false,
+		"new_host_delay": 300,
+		"groupby_simple_monitor": false
+	},
+	"priority": null,
+	"draft_status": "published"
+}

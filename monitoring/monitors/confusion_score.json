@@ -1,0 +1,20 @@
+{
+	"id": 17241505,
+	"name": "[ CRITICAL ] Degraded user experience: Confusion Score",
+	"type": "query alert",
+	"query": "avg(last_5m):avg:trace.background.confusion_score{*} > 0.8",
+	"message": "### User Experience Degradation Alert\n\n**Severity:** Critical\n**Trigger:** Increased Confusion Score\n\nAn Increased value of Confusion Score was observed for the marked duration.\n\n**Recommended Action:**\n### 🔎 Investigation Since this alert was triggered by increased session length, click below to see top traces in terms of confusion score: [View Spans](https://us5.datadoghq.com/apm/traces?query=env%3Adev%20%40user.confusion_score%3A%2A&agg_m=count&agg_m_source=base&agg_t=count&cols=service%2Cresource_name%2C%40duration%2C%40http.method%2C%40http.status_code%2C%40_span.count%2C%40_duration.by_service%2C%40user.confusion_score&fromUser=false&historicalData=true&messageDisplay=inline&query_translation_version=v0&sort=desc&sort_by=%40user.confusion_score&sort_order=desc&spanType=all&storage=hot&view=spans&start=1766474817972&end=1766489217972&paused=false)\n\n@sd.ace9719@gmail.com @workflow-Swapnil-Dec-21-2025-1618",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 0.8,
+			"warning": 0.6
+		},
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": false,
+		"new_host_delay": 300
+	},
+	"priority": null,
+	"draft_status": "published"
+}

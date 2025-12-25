@@ -1,0 +1,22 @@
+{
+	"id": 17240175,
+	"name": "[ CRITICAL ] High LLM Usage cost alert",
+	"type": "llm-observability alert",
+	"query": "llm-observability(\"@event_type:span\").rollup(\"sum\", \"@metrics.estimated_total_cost\").last(\"5m\") > 5000000000",
+	"message": "### Cost Alert\n\n**Severity:** Critical\n**Trigger:** High LLM usage \n\nThis may indicate either increased number of requests or a potential attack.\n\n**Recommended Action:**\n### 🔎 Investigation Since this alert was triggered by increased usage, click below to see top traces in terms of cost: [View Spans](http://us5.datadoghq.com/llm/traces?query=%40ml_app%3Avertex-chat-bot%20%40event_type%3Aspan%20%40parent_id%3A%2A&agg_m=count&agg_m_source=base&agg_t=count&expanded-view=expanded&fromUser=false&selectedTab=overview&sortColumn=%40metrics.estimated_total_cost&sortOrder=desc&spanId=14658460341970701433&viz=stream&start=1766482159450&end=1766485759450&paused=false)\n\n@sd.ace9719@gmail.com @workflow-Swapnil-Dec-21-2025-1618",
+	"tags": [],
+	"options": {
+		"thresholds": {
+			"critical": 5000000000,
+			"warning": 2500000000
+		},
+		"enable_logs_sample": false,
+		"notify_audit": false,
+		"on_missing_data": "default",
+		"include_tags": false,
+		"new_host_delay": 300,
+		"groupby_simple_monitor": false
+	},
+	"priority": null,
+	"draft_status": "published"
+}
