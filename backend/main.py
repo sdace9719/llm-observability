@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 import os
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from flask import Flask, jsonify, request, session
 from typing import Any, Dict, Optional
 from ddtrace import patch_all
 from ddtrace import tracer
 patch_all(llm_providers=["langchain"])
 from llm import State, chatagent
 
-from flask import Flask, jsonify, request
 import psycopg
 
 from db_utils import get_db_conn, DB_SETTINGS
@@ -27,6 +27,8 @@ from llm_utils import set_emotion_tags
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY", "dev-secret-key")
+JUDGE_PASSWORD = os.getenv("JUDGE_PASSWORD")
 
 retriever = None
 
@@ -61,6 +63,10 @@ def get_db_conn():
 @app.route('/api/login', methods=['POST'])
 def login() -> Any:
   payload: Dict[str, Any] = request.get_json(silent=True) or {}
+  user_code = payload.get("access_code")
+  if user_code != JUDGE_PASSWORD:
+    return jsonify({"error": "Invalid Code"}), 401
+  session["is_authorized"] = True
   user_identifier = str(payload.get('email') or payload.get('user') or '').strip()
   if not user_identifier:
     return jsonify({'error': 'Missing user identifier (email or user)'}), 400
@@ -102,6 +108,9 @@ def health() -> Any:
 @app.route('/api/chat', methods=['POST'])
 async def chat() -> Any:
   
+  if not session.get("is_authorized"):
+    return jsonify({'error': 'Unauthorized. Please login first.'}), 401
+
   session_id = request.cookies.get('session_id')
   if not validate_session(session_id):
     return jsonify({'error': 'Session expired or invalid. Please login again.'}), 401
@@ -205,5 +214,5 @@ if __name__ == '__main__':
   # # Create a Retriever
   # # "k=3" means "Find the top 3 most relevant policy chunks"
   # retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-  app.run(debug=True,use_reloader=False)
+  app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True, use_reloader=False)
 

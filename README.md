@@ -70,6 +70,17 @@ Set `VITE_API_URL` if your backend isn’t on the default `http://localhost:5000
 - `backend/generate_schema_summary.py`: produces `backend/support_schema.txt` describing all tables/columns/types for LLM prompting.
 - `backend/db/init.sql`: full schema + seed data + role grants.
 
+## Mutual TLS (mTLS)
+- `backend/run.sh` will generate a self-signed CA and server/client certs into `backend/certs/` if missing.
+- Flask serves HTTPS with client cert verification using `SERVER_CERT`, `SERVER_KEY`, and `CA_CERT` (exported in `run.sh`).
+- Quick test:
+  ```bash
+  cd backend
+  ./run.sh &
+  curl -k --cert certs/client.crt --key certs/client.key --cacert certs/ca.crt https://localhost:5000/health
+  ```
+- Clients (frontend/tests) must supply the client cert/key and trust `ca.crt` when calling the API.
+
 ## Notes
 - Session rules: max 3 active sessions per user; sessions expire after 5 minutes. `/api/sessions` (DELETE) will clear all sessions for a given user; `/api/logout` deletes the current session.
 - CORS is set to allow cookies; frontend uses `credentials: 'include'`.

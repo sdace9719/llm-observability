@@ -20,9 +20,43 @@
 }
 
 .login-card {
-  width: min(100%, 420px);
+  width: min(100%, 520px);
   padding: 2.5rem 2rem;
   gap: 1.5rem;
+}
+
+.cert-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cert-upload label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.cert-upload textarea {
+  width: 100%;
+  min-height: 96px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.cert-upload input[type='file'] {
+  margin-top: 0.25rem;
+}
+
+.cert-upload .outline-btn {
+  align-self: flex-start;
+  margin-top: 0.5rem;
 }
 
 .chat-header {
@@ -30,6 +64,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.login-card .chat-header {
+  justify-content: flex-start;
+  gap: 1.25rem;
 }
 
 .avatar {
@@ -64,12 +103,14 @@
   font-size: 1.25rem;
   margin: 0;
   font-weight: 600;
+  text-align: left;
 }
 
 .subtitle {
   margin: 0.1rem 0 0;
   color: #6b7280;
   font-size: 0.95rem;
+  text-align: left;
 }
 
 .outline-btn {
@@ -313,6 +354,15 @@
 .chat-input button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.login-card .chat-input {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.login-card .chat-input button {
+  width: 100%;
 }
 
 .error-text {

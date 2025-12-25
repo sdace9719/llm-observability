@@ -63,7 +63,7 @@ export default function App() {
   const [inputValue, setInputValue] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginState, setLoginState] = useState({ user: '', error: '', pending: false });
+  const [loginState, setLoginState] = useState({ user: '', accessCode: '', error: '', pending: false });
   const scrollAnchorRef = useRef(null);
 
   useEffect(() => {
@@ -118,7 +118,8 @@ export default function App() {
   const handleLogin = async (event) => {
     event.preventDefault();
     const user = loginState.user.trim();
-    if (!user || loginState.pending) return;
+    const accessCode = loginState.accessCode.trim();
+    if (!user || !accessCode || loginState.pending) return;
     setLoginState((prev) => ({ ...prev, pending: true, error: '' }));
 
     try {
@@ -126,7 +127,7 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email: user })
+        body: JSON.stringify({ email: user, access_code: accessCode })
       });
       if (!response.ok) {
         const detail = await safeParseJson(response);
@@ -149,9 +150,11 @@ export default function App() {
       {!isLoggedIn ? (
         <LoginCard
           value={loginState.user}
+          accessCode={loginState.accessCode}
           error={loginState.error}
           pending={loginState.pending}
           onChange={(value) => setLoginState((prev) => ({ ...prev, user: value }))}
+          onAccessCodeChange={(value) => setLoginState((prev) => ({ ...prev, accessCode: value }))}
           onSubmit={handleLogin}
         />
       ) : (
@@ -304,8 +307,7 @@ async function safeParseJson(response) {
     return null;
   }
 }
-
-function LoginCard({ value, onChange, onSubmit, error, pending }) {
+function LoginCard({ value, accessCode, onChange, onAccessCodeChange, onSubmit, error, pending }) {
   return (
     <div className="chat-card login-card">
       <header className="chat-header">
@@ -326,6 +328,14 @@ function LoginCard({ value, onChange, onSubmit, error, pending }) {
           value={value}
           onChange={(event) => onChange(event.target.value)}
           aria-label="Email"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Enter access code"
+          value={accessCode}
+          onChange={(event) => onAccessCodeChange(event.target.value)}
+          aria-label="Access code"
           required
         />
         <button type="submit" disabled={!value.trim() || pending}>
