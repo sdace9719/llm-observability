@@ -1,0 +1,82 @@
+{
+    "id": "9d5c9aa7-2f75-47e1-8a7b-fcef2adef3ae",
+    "name": "Create-Incident-from-Alert",
+    "description": "",
+    "tags": [
+      "service:vertex-chat-bot"
+    ],
+    "published": true,
+    "spec": {
+      "triggers": [
+        {
+          "startStepNames": [
+            "Create_incident"
+          ],
+          "monitorTrigger": {}
+        }
+      ],
+      "steps": [
+        {
+          "name": "Create_incident",
+          "actionId": "com.datadoghq.dd.incidents.createIncident",
+          "parameters": [
+            {
+              "name": "customer_impacted",
+              "value": false
+            },
+            {
+              "name": "title",
+              "value": "{{ Source.monitor.name }}"
+            },
+            {
+              "name": "relationships",
+              "value": {
+                "commander_user": {
+                  "data": {
+                    "id": "21ace924-a844-4876-a781-e61ac6cc18f2",
+                    "type": "users"
+                  }
+                }
+              }
+            },
+            {
+              "name": "incident_type_uuid",
+              "value": "9d1e0ab7-a166-4a8f-87fb-db89db9727d4"
+            },
+            {
+              "name": "fields",
+              "value": {
+                "services": {
+                  "value": [
+                    "vertex-chat-bot"
+                  ]
+                },
+                "severity": {
+                  "value": "SEV-1"
+                }
+              }
+            },
+            {
+              "name": "initial_cells",
+              "value": [
+                {
+                  "cell_type": "markdown",
+                  "content": {
+                    "content": "{{ Source.monitor.message }}"
+                  },
+                  "important": false
+                }
+              ]
+            }
+          ],
+          "display": {
+            "bounds": {
+              "x": 0,
+              "y": 192
+            }
+          }
+        }
+      ],
+      "handle": "Swapnil-Dec-21-2025-1618"
+    }
+  }

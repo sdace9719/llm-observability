@@ -41,3 +41,7 @@
 - Introduce streaming responses and retry/fallback strategies for LLM calls.
 - Harden LLM security and rate limits for production use.
 
+## Incident Workflow (Datadog)
+- open a SEV-1 incident, assigning a commander and embedding the monitor message in the incident timeline.
+- Ownership: Notifications/emails to owners are configured in monitor definitions (see monitor JSONs) to ensure responsible parties are alerted when incidents are created.
+
