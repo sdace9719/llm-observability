@@ -205,7 +205,7 @@ def update_order_items_if_processing(order_id: int, items: str) -> Mapping[str, 
             raise ValueError(f"Order {order_id} not found")
         status = row[0]
         if status != "processing":
-            raise ValueError(f"Order {order_id} is {status}; changes allowed only in processing.")
+            return {"error": f"Order {order_id} is {status}; changes allowed only in processing."}
 
         # Clear existing items and insert new ones
         cur.execute("DELETE FROM order_items WHERE order_id = %s", (order_id,))
