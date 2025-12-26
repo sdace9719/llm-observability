@@ -2,6 +2,9 @@ import time
 import random as r
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 f1 = open("sql_queries.md", "r")
 f2 = open("queries.md", "r")
@@ -25,17 +28,15 @@ user_identifiers = ["alex.martin@example.com",
 
 max_conversations = 5
 
-BASE_URL = "https://localhost:5000"
-CERT_DIR = os.path.join(os.path.dirname(__file__), "certs")
-CLIENT_CERT = (os.path.join(CERT_DIR, "client.crt"), os.path.join(CERT_DIR, "client.key"))
-CA_CERT = os.path.join(CERT_DIR, "ca.crt")
+BASE_URL = "http://localhost:4000"
+JUDGE_PASSWORD = os.getenv("JUDGE_PASSWORD", "judge")
 
 
-for i in range(5):
+for i in range(6):
     req = requests.session()
     user_identifier = r.choice(user_identifiers)
-    requests.delete(f"{BASE_URL}/api/sessions", json={"email": user_identifier}, cert=CLIENT_CERT, verify=CA_CERT)
-    login_response = req.post(f"{BASE_URL}/api/login", json={'email': user_identifier}, cert=CLIENT_CERT, verify=CA_CERT)
+    requests.delete(f"{BASE_URL}/api/sessions", json={"email": user_identifier})
+    login_response = req.post(f"{BASE_URL}/api/login", json={'email': user_identifier, 'access_code': JUDGE_PASSWORD})
     print("new session started....")
     mx = r.randint(1, max_conversations)
     for j in range(mx):
@@ -44,7 +45,7 @@ for i in range(5):
         print(q)
         try:
             # Use the same session to carry cookies (session_id).
-            response = req.post(f"{BASE_URL}/api/chat", json=payload, cert=CLIENT_CERT, verify=CA_CERT)
+            response = req.post(f"{BASE_URL}/api/chat", json=payload)
             reply = response.json()['reply']
             if isinstance(reply, list):
                 reply = reply[0]['text']
@@ -52,7 +53,7 @@ for i in range(5):
         except Exception as e:
             print(e)
             continue
-    logout_response = req.post(f"{BASE_URL}/api/logout", cert=CLIENT_CERT, verify=CA_CERT)
+    logout_response = req.post(f"{BASE_URL}/api/logout")
     print("session ended....")
     print("--------------------------------")
 
@@ -60,13 +61,13 @@ queries = ['I want to place a new order of 2 Floor Mats','Instead of the 2 mats 
 for q in queries:
     req = requests.session()
     user_identifier = r.choice(user_identifiers)
-    login_response = req.post(f"{BASE_URL}/api/login", json={'email': user_identifier}, cert=CLIENT_CERT, verify=CA_CERT)
+    login_response = req.post(f"{BASE_URL}/api/login", json={'email': user_identifier, 'access_code': JUDGE_PASSWORD})
     print("new session started....")
     payload = {'prompt': q}
-    response = req.post(f"{BASE_URL}/api/chat", json=payload, cert=CLIENT_CERT, verify=CA_CERT)
+    response = req.post(f"{BASE_URL}/api/chat", json=payload)
     reply = response.json()['reply']
     print(reply)
-    logout_response = req.post(f"{BASE_URL}/api/logout", cert=CLIENT_CERT, verify=CA_CERT)
+    logout_response = req.post(f"{BASE_URL}/api/logout")
     print("session ended....")
     print("--------------------------------")
 

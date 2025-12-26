@@ -16,7 +16,11 @@ def check_query_classification(State: State) -> State:
     template = """
     You need to act as a critic, indentifying if a given user query is a question, statement or a possible security violation.
     If a user is trying to access unauthorized information, such as information on other users and their products, then reply with "Security Violation".
-    The only three possible types: "yes", "no", "Security Violation".
+    The only three possible types: "yes", "no", "Security Violation" or "request".
+    return yes when the user asks a question.
+    return no when user makes a statement which cannot be classified as a question.
+    return request when user makes a request to place a new order or change contents of an existing order.
+    return Security Violation when user makes a request to access unauthorized information.
     Only answer based on what is provided in the user query and do not make up any information.
     user query: {query}
     user identifier: {user_identifier}

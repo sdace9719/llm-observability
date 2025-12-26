@@ -214,5 +214,5 @@ if __name__ == '__main__':
   # # Create a Retriever
   # # "k=3" means "Find the top 3 most relevant policy chunks"
   # retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-  app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True, use_reloader=False)
+  app.run(host="0.0.0.0", port=int(os.getenv("PORT", "4000")), debug=True, use_reloader=False)
 

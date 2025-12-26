@@ -413,7 +413,9 @@ chatbotapp.add_conditional_edges(
     route_check_answer_verification_needed,
     {
         "yes": "check_answer_relevance",
-        "no": END
+        "no": END,
+        "request": END,
+        "Security Violation": END
     }
 )
 # chatbotapp.add_edge("get_answer", "check_answer_relevance")

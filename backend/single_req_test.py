@@ -1,6 +1,9 @@
 import random as r
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 f = open("tag_queries.md", "r")
@@ -19,16 +22,14 @@ for line in lines:
 
 user_identifier = "taylor.chen@example.com"
 
-BASE_URL = "https://localhost:5000"
-CERT_DIR = os.path.join(os.path.dirname(__file__), "certs")
-CLIENT_CERT = (os.path.join(CERT_DIR, "client.crt"), os.path.join(CERT_DIR, "client.key"))
-CA_CERT = os.path.join(CERT_DIR, "ca.crt")
+BASE_URL = "http://localhost:5000"
+JUDGE_PASSWORD = os.getenv("JUDGE_PASSWORD", "judge")
 
 max_conversations = 1
 
 
 req = requests.session()
-login_response = req.post(f"{BASE_URL}/api/login", json={'email': user_identifier}, cert=CLIENT_CERT, verify=CA_CERT)
+login_response = req.post(f"{BASE_URL}/api/login", json={'email': user_identifier, 'access_code': JUDGE_PASSWORD})
 print(login_response.json())
 print("new session started....")
 #max_length = r.randint(1, max_conversations)
@@ -41,8 +42,8 @@ for j in range(max_length):
     payload = {'prompt': q}
     print(q)
     # Use the same session so cookies (session_id) are included.
-    response = req.post(f"{BASE_URL}/api/chat", json=payload, cert=CLIENT_CERT, verify=CA_CERT)
+    response = req.post(f"{BASE_URL}/api/chat", json=payload)
     print(response.json()['reply'])
-logout_response = req.post(f"{BASE_URL}/api/logout", cert=CLIENT_CERT, verify=CA_CERT)
+logout_response = req.post(f"{BASE_URL}/api/logout")
 print("session ended....")
 print("--------------------------------")
